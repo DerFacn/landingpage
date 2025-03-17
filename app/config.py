@@ -12,3 +12,4 @@ class Config:
     TOKEN_URL = environ.get('TOKEN_URL')
     USERINFO_URL = environ.get('USERINFO_URL')
     LOGOUT_URL = environ.get('LOGOUT_URL')
+    REDIRECT_URI = environ.get('REDIRECT_URI')

@@ -28,7 +28,7 @@ def get_access_token_with_code(code: str):
                                  "state": state,
                                  "nonce": nonce
                              })
-    
+
     data = response.json()
     access_token = data.get('access_token')
     refresh_token = data.get('refresh_token')
