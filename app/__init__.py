@@ -6,8 +6,8 @@ def create_app(config_obj=Config) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_obj)
 
-    @app.route('/')
-    def index():
-        return {"message": "hello world"}
+    from app.routes import register_functions
+
+    register_functions(app)
 
     return app
