@@ -1,10 +1,5 @@
-import uuid
 import requests
 from flask import current_app, request
-
-
-def generate_id() -> str:
-    return str(uuid.uuid4())
 
 
 def get_access_token_with_code(code: str):
@@ -15,18 +10,13 @@ def get_access_token_with_code(code: str):
     if None in [token_url, client_secret, client_id]:
         raise Exception('Token url, client id or client secret is not provided!')
 
-    state = generate_id()  # CSRF Protection
-    nonce = generate_id()  # Another protect method
-
     response = requests.post(token_url, 
                              data={
                                  "code": code,
                                  "client_id": client_id,
                                  "client_secret": client_secret,
                                  "redirect_uri": "http://127.0.0.1:5000/auth",
-                                 "grant_type": "authorization_code",
-                                 "state": state,
-                                 "nonce": nonce
+                                 "grant_type": "authorization_code"
                              })
 
     data = response.json()
