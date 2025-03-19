@@ -6,6 +6,7 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = environ.get('SECRET_KEY') or 'StandardKey'
+    ALCHEMICAL_DATABASE_URL = environ.get('DATABASE_URL') or 'sqlite:///app.db'
     CLIENT_ID = environ.get('CLIENT_ID')
     CLIENT_SECRET = environ.get('CLIENT_SECRET')
     AUTH_URL = environ.get('AUTH_URL')

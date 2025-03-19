@@ -129,78 +129,32 @@
         </div>
     </div>
     <div class="content">
-        <div class="row">
+        {% for kachel in kacheln %}
+        <div class="row" id={{ kachel.id }}>
             <div class="left-col">
-                <a href="https://moodle.com/" class="cell" id="previewLink">
+                <a href="{{ kachel.link }}" class="cell">
                     <div class="image-container">
-                        <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg" id="previewImage">
+                        <img src="{{ kachel.image }}">
                     </div>
-                    <div class="label" id="previewLabel">Moodle</div>
+                    <div class="label" style="background-color: {{ kachel.background_color }};">{{ kachel.display_name }}</div>
                 </a>
             </div>
             <div class="centre-col">
                 <button type="button" onclick="openEditForm(this)">Edit</button>
-                <button type="button">Delete</button>
+                <button type="button" onclick="deleteCurrentRow(this)">Delete</button>
             </div>
             <div class="right-col">
                 <form method="post">
-                    <input type="text" name="id" style="display: none" value="1">
-                    <input type="text" name="display_name" placeholder="Display name" required autocomplete="off" value="Moodle">
-                    <input type="text" name="link" placeholder="Link" required autocomplete="off" value="https://moodle.com/">
-                    <input type="text" name="image" placeholder="Image link" required autocomplete="off" value="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
-                    <input type="text" name="background_color" placeholder="Background color" required autocomplete="off" value="#ffaf41">
+                    <input type="text" name="id" style="display: none" value="{{ kachel.id }}">
+                    <input type="text" name="display_name" placeholder="Display name" required autocomplete="off" value="{{ kachel.display_name }}">
+                    <input type="text" name="link" placeholder="Link" required autocomplete="off" value="{{ kachel.link }}">
+                    <input type="text" name="image" placeholder="Image link" required autocomplete="off" value="{{ kachel.image }}">
+                    <input type="text" name="background_color" placeholder="Background color" required autocomplete="off" value="{{ kachel.background_color }}">
                     <button type="submit">Edit</button>
                 </form>
             </div>
         </div>
-        <div class="row">
-            <div class="left-col">
-                <a href="https://moodle.com/" class="cell" id="previewLink">
-                    <div class="image-container">
-                        <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg" id="previewImage">
-                    </div>
-                    <div class="label" id="previewLabel">Moodle</div>
-                </a>
-            </div>
-            <div class="centre-col">
-                <button type="button" onclick="openEditForm(this)">Edit</button>
-                <button type="button">Delete</button>
-            </div>
-            <div class="right-col">
-                <form method="post">
-                    <input type="text" name="id" style="display: none" value="1">
-                    <input type="text" name="display_name" placeholder="Display name" required autocomplete="off" value="Moodle">
-                    <input type="text" name="link" placeholder="Link" required autocomplete="off" value="https://moodle.com/">
-                    <input type="text" name="image" placeholder="Image link" required autocomplete="off" value="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
-                    <input type="text" name="background_color" placeholder="Background color" required autocomplete="off" value="#ffaf41">
-                    <button type="submit">Edit</button>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="left-col">
-                <a href="https://moodle.com/" class="cell" id="previewLink">
-                    <div class="image-container">
-                        <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg" id="previewImage">
-                    </div>
-                    <div class="label" id="previewLabel">Moodle</div>
-                </a>
-            </div>
-            <div class="centre-col">
-                <button type="button" onclick="openEditForm(this)">Edit</button>
-                <button type="button">Delete</button>
-            </div>
-            <div class="right-col">
-                <form method="post">
-                    <input type="text" name="id" style="display: none" value="1">
-                    <input type="text" name="display_name" placeholder="Display name" required autocomplete="off" value="Moodle">
-                    <input type="text" name="link" placeholder="Link" required autocomplete="off" value="https://moodle.com/">
-                    <input type="text" name="image" placeholder="Image link" required autocomplete="off" value="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
-                    <input type="text" name="background_color" placeholder="Background color" required autocomplete="off" value="#ffaf41">
-                    <button type="submit">Edit</button>
-                </form>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </body>
 <script>
@@ -210,6 +164,25 @@ function openEditForm(btn) {
         editForm.style.display = 'flex';
     } else {
         editForm.style.display = 'none';
+    }
+}
+
+function deleteCurrentRow(btn) {
+    if (confirm('Delete?')) {
+        fetch('/admin', {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: btn.parentNode.parentNode.id})
+        }).then(response => {
+            if (response.status == 200) {
+                btn.parentNode.parentNode.remove()
+            } else {
+                console.log(response.json())
+                alert(response.json().message)
+            }
+        })
     }
 }
 

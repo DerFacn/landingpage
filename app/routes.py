@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from app import db
+from app.models import Kachel
 from flask import Flask, current_app, request, redirect, make_response, render_template
 from app.utils import get_tokens_with_code, refresh_access_token, get_userinfo, auth_required
 
@@ -6,7 +7,7 @@ from app.utils import get_tokens_with_code, refresh_access_token, get_userinfo, 
 def register_functions(app: Flask):
     app.add_url_rule('/', 'index', index, methods=['GET'])
     app.add_url_rule('/auth', 'auth', auth, methods=['GET'])
-    app.add_url_rule('/admin', 'admin', admin, methods=['GET'])
+    app.add_url_rule('/admin', 'admin', admin, methods=['GET', 'POST', 'DELETE'])
     app.add_url_rule('/logout', 'logout', logout, methods=['GET'])
 
 
@@ -37,12 +38,22 @@ def index():
             resp.set_cookie('access_token', '')
             return resp
 
+    kacheln_results = db.session.scalars(Kachel.select())
+    kacheln = [{
+        "id": kachel.id,
+        "display_name": kachel.display_name,
+        "link": kachel.link,
+        "image": kachel.image,
+        "background_color": kachel.background_color
+    } for kachel in kacheln_results]
+
+    resp = make_response(render_template('index.html', user_info=user_info, kacheln=kacheln))
+    
     if refreshed:
-        resp = make_response(render_template('index.html', user_info=user_info))
         resp.set_cookie('access_token', access_token)
         return resp
 
-    return render_template('index.html', user_info=user_info)
+    return resp
 
 
 def auth():
@@ -62,12 +73,67 @@ def auth():
 
 @auth_required
 def admin(user_info: dict, access_token: str | None):
-    if access_token:
-        resp = make_response(render_template('admin.html', user_info=user_info))
-        resp.set_cookie('access_token', access_token)
-        return resp
+    # if user_info.get('role') != 'admin':
+    #     return redirect('/')
+
+    if request.method == 'POST':
+        kachel_id = request.form.get('id')
+        display_name = request.form.get('display_name')
+        link = request.form.get('link')
+        image = request.form.get('image')
+        background_color = request.form.get('background_color')
+
+        if kachel_id:
+            kachel = db.session.scalar(Kachel.select().filter_by(id=kachel_id))
+
+            if not kachel:
+                return redirect('/admin')
+            
+            kachel.display_name = display_name
+            kachel.link = link
+            kachel.image = image
+            kachel.background_color = background_color
+
+            db.session.commit()
+        else:
+            neu_kachel = Kachel(
+                display_name=display_name,
+                link=link,
+                image=image,
+                background_color=background_color
+            )
+
+            db.session.add(neu_kachel)
+            db.session.commit()
     
-    return render_template('admin.html', user_info=user_info)
+    elif request.method == 'DELETE':
+        kachel_id = request.json.get('id')
+
+        kachel = db.session.scalar(Kachel.select().filter_by(id=kachel_id))
+
+        if not kachel:
+            return {"message": "Not found"}, 404
+        
+        db.session.delete(kachel)
+        db.session.commit()
+
+        return {"message": "OK"}, 200
+
+    kacheln_results = db.session.scalars(Kachel.select())
+    kacheln = [{
+        "id": kachel.id,
+        "display_name": kachel.display_name,
+        "link": kachel.link,
+        "image": kachel.image,
+        "background_color": kachel.background_color
+    } for kachel in kacheln_results]
+
+    resp = make_response(render_template('admin.html', user_info=user_info, kacheln=kacheln))
+
+    if access_token:
+        resp.set_cookie('access_token', access_token)
+    
+    return resp
 
 
 def logout():
