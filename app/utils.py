@@ -1,6 +1,6 @@
 import base64
 import requests
-from flask import current_app, request
+from flask import current_app, request, make_response, redirect
 
 
 def get_tokens_with_code(code: str):
@@ -69,3 +69,25 @@ def get_userinfo(token:str=None):
         raise Exception('Unauthorized!')
     
     return response.json()
+
+
+def auth_required(func):
+    def wrapper(*args, **kwargs):
+        access_token = None
+        try:
+            user_info = get_userinfo()
+        except:
+            try:
+                # If access token expired
+                access_token = refresh_access_token()
+
+                user_info = get_userinfo(access_token)
+            except:
+                # If refresh token expired too then reset all the tokens and go to the auth
+                resp = make_response(redirect('/'))
+                resp.set_cookie('refresh_token', '')
+                resp.set_cookie('access_token', '')
+                return resp
+
+        return func(user_info=user_info, access_token=access_token, *args, **kwargs)
+    return wrapper

@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
-from flask import Flask, current_app, request, redirect, make_response
+from flask import Flask, current_app, request, redirect, make_response, render_template
 from app.utils import get_tokens_with_code, refresh_access_token, get_userinfo
 
 
 def register_functions(app: Flask):
     app.add_url_rule('/', 'index', index, methods=['GET'])
     app.add_url_rule('/auth', 'auth', auth, methods=['GET'])
+    app.add_url_rule('/admin', 'admin', admin, methods=['GET'])
     app.add_url_rule('/logout', 'logout', logout, methods=['GET'])
 
 
@@ -18,25 +19,30 @@ def index():
         redirect_uri = current_app.config.get('REDIRECT_URI')
         url = auth_url + f"?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=openid%20profile"
         return redirect(url)
-    
+
+    refreshed = False
     try:
         user_info = get_userinfo()
     except:
-        access_token = refresh_access_token()
-        
         try:
+            # If access token expired
+            access_token = refresh_access_token()
+
             user_info = get_userinfo(access_token)
+            refreshed = True
         except:
+            # If refresh token expired too then reset all the tokens and go to the auth
             resp = make_response(redirect('/'))
             resp.set_cookie('refresh_token', '')
             resp.set_cookie('access_token', '')
             return resp
- 
-    expiration = datetime.now() + timedelta(days=400)
-    resp = make_response({"message": user_info})
-    resp.set_cookie('access_token', access_token, expires=expiration)
 
-    return resp
+    if refreshed:
+        resp = make_response(render_template('index.html', user_info=user_info))
+        resp.set_cookie('access_token', access_token)
+        return resp
+
+    return render_template('index.html', user_info=user_info)
 
 
 def auth():
@@ -53,6 +59,25 @@ def auth():
     response.set_cookie('refresh_token', data.get('refresh_token'), expires=expiration)
 
     return response
+
+
+def admin():
+    resp = make_response(render_template('admin.html'))
+
+    try:
+        user_info = get_userinfo()
+    except:
+        try:
+            access_token = refresh_access_token()
+        except:
+            redirect('/')
+        user_info = get_userinfo(access_token)
+        resp.set_cookie('access_token', access_token)
+
+    if user_info.get('role') != 'admin':
+        return redirect('/')
+
+    return resp
 
 
 def logout():
