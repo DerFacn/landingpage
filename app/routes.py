@@ -53,10 +53,9 @@ def auth():
     except:
         return {"message": "Try again later"}
     
-    expiration = datetime.now() + timedelta(days=400)
     response = make_response(redirect('/'))
-    response.set_cookie('access_token', data.get('access_token'), expires=expiration)
-    response.set_cookie('refresh_token', data.get('refresh_token'), expires=expiration)
+    response.set_cookie('access_token', data.get('access_token'))
+    response.set_cookie('refresh_token', data.get('refresh_token'))
 
     return response
 
