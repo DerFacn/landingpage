@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from flask import Flask, current_app, request, redirect, make_response, render_template
-from app.utils import get_tokens_with_code, refresh_access_token, get_userinfo
+from app.utils import get_tokens_with_code, refresh_access_token, get_userinfo, auth_required
 
 
 def register_functions(app: Flask):
@@ -61,23 +61,14 @@ def auth():
     return response
 
 
-def admin():
-    resp = make_response(render_template('admin.html'))
-
-    try:
-        user_info = get_userinfo()
-    except:
-        try:
-            access_token = refresh_access_token()
-        except:
-            redirect('/')
-        user_info = get_userinfo(access_token)
+@auth_required
+def admin(user_info: dict, access_token: str | None):
+    if access_token:
+        resp = make_response(render_template('admin.html', user_info=user_info))
         resp.set_cookie('access_token', access_token)
-
-    if user_info.get('role') != 'admin':
-        return redirect('/')
-
-    return resp
+        return resp
+    
+    return render_template('admin.html', user_info=user_info)
 
 
 def logout():
