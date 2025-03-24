@@ -73,8 +73,8 @@ def auth():
 
 @auth_required
 def admin(user_info: dict, access_token: str | None):
-    # if user_info.get('role') != 'admin':
-    #     return redirect('/')
+    if user_info.get('role') != 'admin':
+        return redirect('/')
 
     if request.method == 'POST':
         kachel_id = request.form.get('id')

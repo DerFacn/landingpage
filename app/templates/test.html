@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Layout</title>
+    <style>
+        .title {
+            width: 100%;
+            height: auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .cell {
+            width: 120px;
+            min-width: 120px;
+            height: 140px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell .image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .cell img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .cell .label {
+            width: 100%;
+            background-color: #0082c9;
+            color: white;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 80%;
+            padding: 10px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<body>
+    <div class="title">
+        <h1>Willkommen an EDV-Landingpage</h1>
+    </div>
+    <div class="wrapper">
+        <div class="content">
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+            <a href="https://moodle.com" class="cell">
+                <div class="image-container">
+                    <img src="https://download.kalisch-systems.de/ld//Moodlelogo.svg">
+                </div>
+                <div class="label" style="background-color: #ffaf41;">Moodle</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
